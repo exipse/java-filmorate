@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.exception;
 
-public class ValidationException extends Exception{
+public class ValidationException extends RuntimeException {
 
-    public ValidationException(String ex){
+    public ValidationException(String ex) {
         super(ex);
     }
 }

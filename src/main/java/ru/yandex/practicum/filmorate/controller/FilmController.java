@@ -17,43 +17,38 @@ import java.util.List;
 public class FilmController {
 
     private static int count = 1;
-    private HashMap<Integer, Film> filmMap = new HashMap<>();
+    private final HashMap<Integer, Film> filmMap = new HashMap<>();
     static final int MAX_LENGTH_DESCRIPTION = 200;
-    public static final LocalDate FILM_BIRTHDAY = LocalDate.of(1895, Month.DECEMBER, 28);
-    protected static void setCount(int count) {
-        FilmController.count = count;
-    }
+    static final LocalDate FILM_BIRTHDAY = LocalDate.of(1895, Month.DECEMBER, 28);
 
     @PostMapping
-    public Film create(@RequestBody Film film) throws ValidationException {
+    public Film create(@RequestBody Film film) {
         validateObject(film);
         film.setId(count);
         count += 1;
         filmMap.put(film.getId(), film);
+        log.info("Фильм с id = " + film.getId() + " сохранен");
         return film;
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) throws ValidationException {
+    public Film update(@RequestBody Film film) {
         validateObject(film);
-        if (!(filmMap.containsKey(film.getId()))) {
+        if (!filmMap.containsKey(film.getId())) {
             log.error("Фильма с id = " + film.getId() + " не существует");
             throw new ValidationException("Фильма с id = " + film.getId() + " не существует");
         }
         filmMap.put(film.getId(), film);
+        log.info("Данные по фильму с id = " + film.getId() + " обновлены");
         return film;
     }
 
     @GetMapping
     public List<Film> getAllFilms() {
-        ArrayList<Film> films = new ArrayList<>();
-        for (Film value : filmMap.values()) {
-            films.add(value);
-        }
-        return films;
+        return new ArrayList<>(filmMap.values());
     }
 
-    private void validateObject(Film film) throws ValidationException {
+    private void validateObject(Film film) {
         if (film.getName().isBlank()) {
             log.error("Название не может быть пустым");
             throw new ValidationException("Название не может быть пустым");

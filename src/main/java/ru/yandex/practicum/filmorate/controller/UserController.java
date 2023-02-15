@@ -23,35 +23,33 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody User user) throws ValidationException {
+    public User create(@RequestBody User user) {
         validateObject(user);
         user.setId(count);
         count += 1;
         mapUsers.put(user.getId(), user);
+        log.info("Юзер с id = " + user.getId() + " сохранен");
         return user;
     }
 
     @PutMapping
-    public User update(@RequestBody User user) throws ValidationException {
-            validateObject(user);
-            if (!(mapUsers.containsKey(user.getId()))) {
-                log.error("Юзера с id = " + user.getId() + " не существует");
-                throw new ValidationException("Юзера с id = " + user.getId() + " не существует");
-            }
+    public User update(@RequestBody User user) {
+        validateObject(user);
+        if (!(mapUsers.containsKey(user.getId()))) {
+            log.error("Юзера с id = " + user.getId() + " не существует");
+            throw new ValidationException("Юзера с id = " + user.getId() + " не существует");
+        }
         mapUsers.put(user.getId(), user);
+        log.info("Данные по юзеру с id = " + user.getId() + " обновлены");
         return user;
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        ArrayList<User> users = new ArrayList<>();
-        for (User value : mapUsers.values()) {
-            users.add(value);
-        }
-        return users;
+        return new ArrayList<>(mapUsers.values());
     }
 
-    private void validateObject(User user) throws ValidationException {
+    private void validateObject(User user) {
         if (user.getEmail().isBlank() || (!(user.getEmail().contains("@")))) {
             log.error("Электронная почта не может быть пустой и должна содержать символ @");
             throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
@@ -71,11 +69,13 @@ public class UserController {
 
     private boolean containsWhiteSpace(String line) {
         boolean space = false;
-        if (line != null) {
-            for (int i = 0; i < line.length(); i++) {
-                if (line.charAt(i) == ' ') {
-                    space = true;
-                }
+        if (line.isBlank()) {
+            return space;
+        }
+        for (int i = 0; i < line.length(); i++) {
+            if (line.charAt(i) == ' ') {
+                space = true;
+                break;
             }
         }
         return space;

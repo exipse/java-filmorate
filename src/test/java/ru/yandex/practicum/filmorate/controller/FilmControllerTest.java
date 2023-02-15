@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -11,16 +10,12 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FilmControllerTest  {
+class FilmControllerTest {
     FilmController filmController;
 
     @BeforeEach
     public void beforeEach() {
         filmController = new FilmController();
-    }
-    @AfterEach
-    public void after() {
-       FilmController.setCount(1);
     }
 
     @Test
@@ -68,7 +63,7 @@ class FilmControllerTest  {
                     }
                 });
         assertEquals("Максимальная длина превышает " + FilmController.MAX_LENGTH_DESCRIPTION + " символов",
-                                                                                                exception.getMessage());
+                exception.getMessage());
     }
 
     @Test

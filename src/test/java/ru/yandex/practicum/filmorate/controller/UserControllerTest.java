@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -48,7 +47,7 @@ class UserControllerTest {
                     }
                 });
         assertEquals("Электронная почта не может быть пустой и должна содержать символ @",
-                                                                                    exception.getMessage());
+                exception.getMessage());
     }
 
     @Test
@@ -64,7 +63,7 @@ class UserControllerTest {
                     }
                 });
         assertEquals("Электронная почта не может быть пустой и должна содержать символ @",
-                                                                                            exception.getMessage());
+                exception.getMessage());
     }
 
     @Test
