@@ -36,7 +36,7 @@ public class UserController {
     @PutMapping
     public User update(@Valid @RequestBody User user) {
         validateObject(user);
-        if (!(mapUsers.containsKey(user.getId()))) {
+        if (!mapUsers.containsKey(user.getId())) {
             log.error("Юзера с id = " + user.getId() + " не существует");
             throw new ValidationException("Юзера с id = " + user.getId() + " не существует");
         }
@@ -51,7 +51,7 @@ public class UserController {
     }
 
     private void validateObject(User user) {
-        if (containsWhiteSpace(user.getLogin()) || user.getLogin().isBlank()) {
+        if (containsWhiteSpace(user.getLogin())) {
             log.error("Логин не может быть пустым и содержать пробелы");
             throw new ValidationException("Логин не может быть пустым и содержать пробелы");
         }
@@ -65,16 +65,14 @@ public class UserController {
     }
 
     private boolean containsWhiteSpace(String line) {
-        boolean space = false;
         if (line.isBlank()) {
-            return space;
+            return true;
         }
         for (int i = 0; i < line.length(); i++) {
             if (line.charAt(i) == ' ') {
-                space = true;
-                break;
+                return true;
             }
         }
-        return space;
+        return false;
     }
 }
