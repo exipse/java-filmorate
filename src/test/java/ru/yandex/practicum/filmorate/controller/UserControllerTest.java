@@ -7,12 +7,17 @@ import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.time.LocalDate;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
     UserController userController;
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @BeforeEach
     public void beforeEach() {
@@ -36,34 +41,20 @@ class UserControllerTest {
 
     @Test
     public void addEmptyEmail() throws ValidationException {
-        final ValidationException exception = assertThrows(
-                ValidationException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws ValidationException {
-                        User user = new User("", "something",
-                                LocalDate.of(1990, 01, 01));
-                        userController.create(user);
-                    }
-                });
-        assertEquals("Электронная почта не может быть пустой и должна содержать символ @",
-                exception.getMessage());
+        User user = new User("", "something",
+                LocalDate.of(1990, 01, 01));
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertFalse(violations.isEmpty());
+        assertEquals("Электронная почта не может быть пустой", violations.iterator().next().getMessage());
     }
 
     @Test
     public void addNoCorrectEmail() throws ValidationException {
-        final ValidationException exception = assertThrows(
-                ValidationException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws ValidationException {
-                        User user = new User("test.gmail.com", "something",
-                                LocalDate.of(1990, 01, 01));
-                        userController.create(user);
-                    }
-                });
-        assertEquals("Электронная почта не может быть пустой и должна содержать символ @",
-                exception.getMessage());
+        User user = new User("test.gmail.com", "something",
+                LocalDate.of(1990, 01, 01));
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertFalse(violations.isEmpty());
+        assertEquals("Электронная почта должна содержать символ @", violations.iterator().next().getMessage());
     }
 
     @Test

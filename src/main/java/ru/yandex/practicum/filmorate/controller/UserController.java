@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
         validateObject(user);
         user.setId(count);
         count += 1;
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody User user) {
+    public User update(@Valid @RequestBody User user) {
         validateObject(user);
         if (!(mapUsers.containsKey(user.getId()))) {
             log.error("Юзера с id = " + user.getId() + " не существует");
@@ -50,10 +51,6 @@ public class UserController {
     }
 
     private void validateObject(User user) {
-        if (user.getEmail().isBlank() || (!(user.getEmail().contains("@")))) {
-            log.error("Электронная почта не может быть пустой и должна содержать символ @");
-            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
-        }
         if (containsWhiteSpace(user.getLogin()) || user.getLogin().isBlank()) {
             log.error("Логин не может быть пустым и содержать пробелы");
             throw new ValidationException("Логин не может быть пустым и содержать пробелы");
