@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -21,12 +23,13 @@ class UserControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        userController = new UserController();
+        userController = new UserController(new UserService(new InMemoryUserStorage()));
     }
 
     @AfterEach
     public void after() {
-        UserController.setCount(1);
+        InMemoryUserStorage.setCount(1);
+
     }
 
     @Test
