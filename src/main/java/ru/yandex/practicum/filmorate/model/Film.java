@@ -18,19 +18,13 @@ public class Film {
     private LocalDate releaseDate;
     @NonNull
     private long duration;
-    private Set<Integer> listUsersLikes;
+    private Set<Integer> listUsersLikes = new HashSet<>();
 
     public void addInLikeList(int userId) {
-        if (listUsersLikes == null) {
-            listUsersLikes = new HashSet<>();
-        }
         listUsersLikes.add(userId);
     }
 
     public Set<Integer> getLikesList() {
-        if (listUsersLikes == null) {
-            listUsersLikes = new HashSet<>();
-        }
         return listUsersLikes;
     }
 }

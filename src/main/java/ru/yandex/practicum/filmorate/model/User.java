@@ -21,19 +21,13 @@ public class User {
     private String name;
     @NonNull
     private LocalDate birthday;
-    private Set<Integer> friends;
+    private Set<Integer> friends = new HashSet<>();
 
     public void addInList(int idFriend) {
-        if (friends == null) {
-            friends = new HashSet<>();
-        }
         friends.add(idFriend);
     }
 
     public Set<Integer> getFriendsList() {
-        if (friends == null) {
-            friends = new HashSet<>();
-        }
         return friends;
     }
 }

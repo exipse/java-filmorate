@@ -17,14 +17,14 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse validExc(final ValidationException e) {
+    public ErrorResponse validationException(final ValidationException e) {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
     }
 
     @ExceptionHandler({FilmNoFoundException.class, UserNoFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse noFoundExc(final RuntimeException e) {
+    public ErrorResponse notFoundException(final RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), e.getMessage());
     }

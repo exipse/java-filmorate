@@ -55,11 +55,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void addLike(int filmId, int userId) {
         Film film = getFilmMap().get(filmId);
-        if (!film.getLikesList().contains(userId)) {
-            film.addInLikeList(userId);
-        } else {
+        if (film.getLikesList().contains(userId)) {
             throw new ValidationException("Пользователь с id = " + userId + " ставил like фильму c filmId = " + filmId);
         }
+        film.addInLikeList(userId);
     }
 
     @Override

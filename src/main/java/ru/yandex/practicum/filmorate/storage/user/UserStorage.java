@@ -6,22 +6,34 @@ import java.util.List;
 
 public interface UserStorage {
 
-    //сохранение пользователя
+    /**
+     * Сохранение пользователя
+     */
     User create(User user);
 
-    //обновление пользователя
+    /**
+     * Обновление пользователя
+     */
     User update(User user);
 
-    //получение информации о пользователе
+    /**
+     * Получение информации о пользователе
+     */
     User getUser(int userId);
 
-    //получение пользователей
+    /**
+     * Получение пользователей
+     */
     List<User> getAllUsers();
 
-    //получение друзей пользователя
+    /**
+     * Получение друзей пользователя
+     */
     List<User> getFriendsByUser(int userId);
 
-    //получение общих друзей
+    /**
+     * Получение общих друзей
+     */
     List<User> getMatchingFriends(int userId, int friendId);
 
 }
