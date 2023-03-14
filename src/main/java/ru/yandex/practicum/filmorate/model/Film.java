@@ -21,9 +21,9 @@ public class Film {
     @NonNull
     private long duration;
     private Set<Integer> listUsersLikes = new HashSet<>();
-    private List<Genre> genre = new ArrayList<>();
-    @NonNull
-    private AgeLimit ageLimit;
+   // private List<Genre> genre = new ArrayList<>();
+   // @NonNull
+    //rivate AgeLimit ageLimit;
 
     public void addInLikeList(int userId) {
         listUsersLikes.add(userId);
