@@ -23,7 +23,7 @@ public class Film {
     private Set<Integer> listUsersLikes = new HashSet<>();
    // private List<Genre> genre = new ArrayList<>();
    // @NonNull
-    //rivate AgeLimit ageLimit;
+    //private MPA mpa;
 
     public void addInLikeList(int userId) {
         listUsersLikes.add(userId);

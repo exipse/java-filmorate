@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 @Data
-public class AgeLimit {
+public class MPA {
     @NonNull
     private int id;
     @NonNull

@@ -11,15 +11,15 @@ Table film {
  id int [pk]
  name varchar
  description varchar
- releaseDate date
+ release_date date
  duration bigint
- ageLimit int
+ mpa_id int
 }
 
-Ref: film.id < user_like.filmid
-Ref: film.ageLimit > age_limit.id
+Ref: film.id < user_like.film_id
+Ref: film.mpa_id > mpa.id
 
-Table age_limit {
+Table mpa {
  id int [pk]
  name varchar
  descripton varchar
@@ -29,13 +29,13 @@ Table genre {
  id int [pk]
  name varchar
 }
-Ref: genre.id < film_genre.genreId
+Ref: genre.id < film_genre.genre_id
 
 Table film_genre {
- filmId int 
- genreId int
+ film_id int 
+ genre_id int
 }
-Ref: film_genre.filmId > film.id
+Ref: film_genre.film_id > film.id
 
 Table user {
  id int [pk]
@@ -44,20 +44,18 @@ Table user {
  name varchar
  birthday date
 }
-Ref: user.id < user_like.userid
+Ref: user.id < user_like.user_id
 
 Table friends {
- userId int 
- friendId int 
+ user_id int 
+ friend_id int 
  status varchar
 }
-Ref: friends.userId > user.id
-Ref: friends.friendId > user.id
+Ref: friends.user_id > user.id
+Ref: friends.friend_id > user.id
 
 Table user_like {
- filmid int 
- userid int 
+ film_id int 
+ user_id int 
 }
-
-
 ```
