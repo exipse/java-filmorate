@@ -6,9 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.filmorate.exception.FilmNoFoundException;
-import ru.yandex.practicum.filmorate.exception.UserNoFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
 @RestControllerAdvice
@@ -22,7 +20,8 @@ public class ErrorHandler {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
     }
 
-    @ExceptionHandler({FilmNoFoundException.class, UserNoFoundException.class})
+    @ExceptionHandler({FilmNoFoundException.class, UserNoFoundException.class,
+            GenreNoFoundException.class, MPANoFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse notFoundException(final RuntimeException e) {
         log.info(e.getMessage());

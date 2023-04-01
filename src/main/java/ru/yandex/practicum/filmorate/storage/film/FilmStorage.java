@@ -1,9 +1,12 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public interface FilmStorage {
 
@@ -20,17 +23,12 @@ public interface FilmStorage {
     /**
      * Получение фильма по id
      */
-    Film getFilm(int id);
+    Optional<Film> getFilm(int id);
 
     /**
      * Получение фильмов
      */
     List<Film> getAllFilms();
-
-    /**
-     * Получение мапы фильмов
-     */
-    HashMap<Integer, Film> getFilmMap();
 
     /**
      * Добавление лайка
@@ -46,5 +44,25 @@ public interface FilmStorage {
      * Получение популярных фильмов
      */
     List<Film> viewPopularFilms(int count);
+
+    /**
+     * Получение всех жанров
+     */
+    List<Genre> getGenreList();
+
+    /**
+     * Получение жанра по идентификатору
+     */
+    Genre getGenreById(Integer id);
+
+    /**
+     * Получение всех рейтингов
+     */
+    List<MPA> getMpaList();
+
+    /**
+     * Получение рейтингов по идентификатору
+     */
+    MPA getMpaById(Integer id);
 
 }

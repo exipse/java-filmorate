@@ -4,13 +4,10 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.UserNoFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+@Component("InMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
 
     private static int count = 1;
@@ -42,11 +39,40 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User getUser(int userId) {
+    public Optional<User> getUser(int userId) {
         if (!mapUsers.containsKey(userId)) {
             throw new UserNoFoundException("Юзера с id = " + userId + " не существует");
         }
-        return mapUsers.get(userId);
+        return Optional.of(mapUsers.get(userId));
+    }
+
+    @Override
+    public void addFriends(int userId, int friendId) {
+        Optional<User> userOpt = getUser(userId);
+        Optional<User> friendOpt = getUser(friendId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            user.addInList(user);
+        }
+        if (friendOpt.isPresent()) {
+            User friend = friendOpt.get();
+            friend.addInList(friend);
+        }
+    }
+
+    @Override
+    public void deletefromFriends(int userId, int friendId) {
+        Optional<User> userOpt = getUser(userId);
+        Optional<User> friendOpt = getUser(friendId);
+        if (userOpt.isPresent() && friendOpt.isPresent()) {
+            User user = userOpt.get();
+            User friend = friendOpt.get();
+            if (user.getFriends().contains(user)
+                    && friend.getFriends().contains(friend)) {
+                user.getFriends().remove(friend);
+                friend.getFriends().remove(user);
+            }
+        }
     }
 
     @Override
@@ -59,26 +85,16 @@ public class InMemoryUserStorage implements UserStorage {
         if (!getMapUsers().containsKey(userId)) {
             throw new UserNoFoundException("Юзера с id = " + userId + " не существует");
         }
-        List<User> users = new ArrayList<>();
-        Set<Integer> friendList = getMapUsers().get(userId).getFriendsList();
-        for (Integer integer : friendList) {
-            users.add(getMapUsers().get(integer));
-        }
-        return users;
+        List<User> friendList = getMapUsers().get(userId).getFriends();
+        return friendList;
     }
 
     @Override
     public List<User> getMatchingFriends(int userId, int friendId) {
-        List<User> friends = new ArrayList<>();
-        Set<Integer> userFriends = getMapUsers().get(userId).getFriendsList();
-        Set<Integer> friendFriends = getMapUsers().get(friendId).getFriendsList();
-        Set<Integer> commonFriends = userFriends.stream().filter(friendFriends::contains).collect(Collectors.toSet());
-        if (!commonFriends.isEmpty()) {
-            for (Integer commonFriend : commonFriends) {
-                friends.add(getMapUsers().get(commonFriend));
-            }
-        }
-        return friends;
+        List<User> userFriends = getMapUsers().get(userId).getFriends();
+        List<User> friendFriends = getMapUsers().get(friendId).getFriends();
+        List<User> commonFriends = userFriends.stream().filter(friendFriends::contains).collect(Collectors.toList());
+        return commonFriends;
     }
 }
 

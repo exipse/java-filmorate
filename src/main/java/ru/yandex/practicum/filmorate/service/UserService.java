@@ -2,11 +2,12 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNoFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,74 +16,64 @@ import java.util.List;
 @Service
 public class UserService {
 
-    InMemoryUserStorage inMemoryUserStorage;
+    private UserStorage userStorage;
     private LocalDate today = LocalDate.now();
 
     @Autowired
-    public UserService(InMemoryUserStorage inMemoryUserStorage) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    public UserService(@Qualifier("UserDbStorage") UserStorage userStorage) {
+        this.userStorage = userStorage;
     }
 
     public User create(User user) {
         validateObject(user);
-        inMemoryUserStorage.create(user);
+        userStorage.create(user);
         log.info("Юзер с id = " + user.getId() + " сохранен");
         return user;
     }
 
     public User update(User user) {
         validateObject(user);
-        inMemoryUserStorage.update(user);
+        userStorage.update(user);
         log.info("Данные по юзеру с id = " + user.getId() + " обновлены");
         return user;
     }
 
     public List<User> getAllUsers() {
-        return inMemoryUserStorage.getAllUsers();
+        return userStorage.getAllUsers();
     }
 
     public User getUser(int user) {
-        return inMemoryUserStorage.getUser(user);
+        return userStorage.getUser(user).orElseThrow(() -> new UserNoFoundException("Пользователь не найден"));
     }
-
 
     public void addFriends(int userId, int friendId) {
         ifExistsUsers(userId, friendId);
-        User user = inMemoryUserStorage.getMapUsers().get(userId);
-        User friend = inMemoryUserStorage.getMapUsers().get(friendId);
-        user.addInList(friendId);
-        friend.addInList(userId);
+        userStorage.addFriends(userId, friendId);
         log.info(String.format("%d и %d теперь друзья", userId, friendId));
     }
 
     public void deletefromFriends(int userId, int friendId) {
         ifExistsUsers(userId, friendId);
-        User user = inMemoryUserStorage.getMapUsers().get(userId);
-        User friend = inMemoryUserStorage.getMapUsers().get(friendId);
-        if (user.getFriendsList().contains(friendId)
-                && friend.getFriendsList().contains(userId)) {
-            user.getFriends().remove(friendId);
-            friend.getFriends().remove(userId);
-        }
+        userStorage.deletefromFriends(userId, friendId);
         log.info(String.format("%d и %d теперь не друзья", userId, friendId));
     }
 
     public List<User> getFriendsByUser(int userId) {
-        return inMemoryUserStorage.getFriendsByUser(userId);
+        return userStorage.getFriendsByUser(userId);
     }
 
     public List<User> getMatchingFriends(int userId, int friendId) {
         ifExistsUsers(userId, friendId);
-        List<User> matchFriends = inMemoryUserStorage.getMatchingFriends(userId, friendId);
+        List<User> matchFriends = userStorage.getMatchingFriends(userId, friendId);
         log.info("Список совпадений друзей возвращен");
         return matchFriends;
     }
 
     private void ifExistsUsers(int userId, int friendId) {
-        if (!inMemoryUserStorage.getMapUsers().containsKey(userId)) {
+        if (!userStorage.getUser(userId).isPresent()) {
             throw new UserNoFoundException("Юзера с id = " + userId + " не существует");
         }
-        if (!inMemoryUserStorage.getMapUsers().containsKey(friendId)) {
+        if (!userStorage.getUser(friendId).isPresent()) {
             throw new UserNoFoundException("Юзера с id = " + friendId + " не существует");
         }
     }

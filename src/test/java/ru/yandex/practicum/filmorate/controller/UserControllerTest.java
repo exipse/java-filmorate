@@ -34,18 +34,26 @@ class UserControllerTest {
 
     @Test
     public void getUsers() throws ValidationException {
-        User user = new User("something@gmail.com", "something",
-                LocalDate.of(1990, 01, 01));
+        User user = User.builder()
+                .email("something@gmail.com")
+                .login("something")
+                .name("SomeName")
+                .birthday(LocalDate.of(1990, 01, 01))
+                .build();
         userController.create(user);
         assertEquals(1, userController.getAllUsers().size());
-        assertEquals("something", user.getName());
+        assertEquals("SomeName", user.getName());
         assertTrue(user.getBirthday().isBefore(LocalDate.now().plusDays(1)));
     }
 
     @Test
     public void addEmptyEmail() throws ValidationException {
-        User user = new User("", "something",
-                LocalDate.of(1990, 01, 01));
+        User user = User.builder()
+                .email("")
+                .login("something")
+                .name("SomeName")
+                .birthday(LocalDate.of(1990, 01, 01))
+                .build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
         assertEquals("Электронная почта не может быть пустой", violations.iterator().next().getMessage());
@@ -53,8 +61,12 @@ class UserControllerTest {
 
     @Test
     public void addNoCorrectEmail() throws ValidationException {
-        User user = new User("test.gmail.com", "something",
-                LocalDate.of(1990, 01, 01));
+        User user = User.builder()
+                .email("something.gmail.com")
+                .login("something")
+                .name("SomeName")
+                .birthday(LocalDate.of(1990, 01, 01))
+                .build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
         assertEquals("Электронная почта должна содержать символ @", violations.iterator().next().getMessage());
@@ -67,8 +79,12 @@ class UserControllerTest {
                 new Executable() {
                     @Override
                     public void execute() throws ValidationException {
-                        User user = new User("test@gmail.com", "",
-                                LocalDate.of(1990, 01, 01));
+                        User user = User.builder()
+                                .email("something.gmail.com")
+                                .login("")
+                                .name("SomeName")
+                                .birthday(LocalDate.of(1990, 01, 01))
+                                .build();
                         userController.create(user);
                     }
                 });
@@ -82,8 +98,12 @@ class UserControllerTest {
                 new Executable() {
                     @Override
                     public void execute() throws ValidationException {
-                        User user = new User("test@gmail.com", "test test",
-                                LocalDate.of(1990, 01, 01));
+                        User user = User.builder()
+                                .email("something.gmail.com")
+                                .login("  ")
+                                .name("SomeName")
+                                .birthday(LocalDate.of(1990, 01, 01))
+                                .build();
                         userController.create(user);
                     }
                 });
@@ -97,8 +117,12 @@ class UserControllerTest {
                 new Executable() {
                     @Override
                     public void execute() throws ValidationException {
-                        User user = new User("test@gmail.com", "something",
-                                LocalDate.MAX);
+                        User user = User.builder()
+                                .email("something.gmail.com")
+                                .login("something")
+                                .name("SomeName")
+                                .birthday(LocalDate.MAX)
+                                .build();
                         userController.create(user);
                     }
                 });
