@@ -10,6 +10,8 @@ import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,13 +25,17 @@ class FilmControllerTest {
 
     @Test
     public void getFilms() throws ValidationException {
-        Film film = new Film("Человек-паук", "1 часть",
-                LocalDate.of(2002, 04, 30), 121);
-        Film film2 = new Film("Властилин Колец", "Братство Кольца",
-                LocalDate.of(2001, 12, 19), 178);
+        Film film = Film.builder()
+                .id(1)
+                .name("Фильм 1")
+                .description("о гонках")
+                .releaseDate(LocalDate.now().minusYears(23))
+                .duration(130)
+                .listUsersLikes(new HashSet<>())
+                .genres(new ArrayList<>())
+                .build();
         filmController.create(film);
-        filmController.create(film2);
-        assertEquals(2, filmController.getAllFilms().size());
+        assertEquals(1, filmController.getAllFilms().size());
         assertTrue(film.getReleaseDate().isAfter(FilmController.FILM_BIRTHDAY));
     }
 
@@ -40,8 +46,15 @@ class FilmControllerTest {
                 new Executable() {
                     @Override
                     public void execute() throws ValidationException {
-                        Film film = new Film("", "1 часть",
-                                LocalDate.of(2001, 12, 19), 178);
+                        Film film = Film.builder()
+                                .id(1)
+                                .name("")
+                                .description("о гонках")
+                                .releaseDate(LocalDate.now().minusYears(23))
+                                .duration(130)
+                                .listUsersLikes(new HashSet<>())
+                                .genres(new ArrayList<>())
+                                .build();
                         filmController.create(film);
                     }
                 });
@@ -56,12 +69,24 @@ class FilmControllerTest {
                 new Executable() {
                     @Override
                     public void execute() throws ValidationException {
-                        Film film = new Film("Человек-паук", "ИнФоИнфоИнФоИн" +
-                                "ИнФоИнфоИнФоИнфоИнФоИИнФоИнфоИнФоИнфоИИнФоИнфоИнФоИнфоИнФоИнф" +
-                                "оИнФоИнфоИнФоИнфофоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфонФоИнфоИнФоИнф" +
-                                "оИнФоИнфофоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфонфоИнФоИнфоИнФоИнфофоИнФо" +
-                                "ИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИ",
-                                LocalDate.of(2001, 12, 19), 178);
+                        Film film = Film.builder()
+                                .id(1)
+                                .name("Name")
+                                .description("ИнФоИнфоИнФИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИ" +
+                                        "нфоИнИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнИнфоИнФоИнфф" +
+                                        "оИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнн" +
+                                        "фоИнФоИнфоИнИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИн" +
+                                        "ИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнИнфоИнФоИнфоИнИ" +
+                                        "ИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнИнфоИнФоИнфоИнФоИнфоИн" +
+                                        "ФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИн" +
+                                        "ФоИнфоИнФоИнфоИнФоИнфоИнИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИн" +
+                                        "ФоИнфоИнФоИнфоИнИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфо" +
+                                        "ИнИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнИнфоИнФо" +
+                                        "ФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИнФоИнфоИн")
+                                .releaseDate(LocalDate.now().minusYears(23))
+                                .listUsersLikes(new HashSet<>())
+                                .genres(new ArrayList<>())
+                                .build();
                         filmController.create(film);
                     }
                 });
@@ -76,8 +101,15 @@ class FilmControllerTest {
                 new Executable() {
                     @Override
                     public void execute() throws ValidationException {
-                        Film film = new Film("Человек-паук", "ИнФо",
-                                LocalDate.of(1895, 12, 27), 178);
+                        Film film = Film.builder()
+                                .id(1)
+                                .name("Фильм 1")
+                                .description("о гонках")
+                                .releaseDate(LocalDate.of(1895, 12, 27))
+                                .duration(130)
+                                .listUsersLikes(new HashSet<>())
+                                .genres(new ArrayList<>())
+                                .build();
                         filmController.create(film);
                     }
                 });
@@ -92,8 +124,15 @@ class FilmControllerTest {
                 new Executable() {
                     @Override
                     public void execute() throws ValidationException {
-                        Film film = new Film("Человек-паук", "ИнФо",
-                                LocalDate.of(2001, 12, 19), -178);
+                        Film film = Film.builder()
+                                .id(1)
+                                .name("Фильм 1")
+                                .description("о гонках")
+                                .releaseDate(LocalDate.now().minusYears(23))
+                                .duration(-130)
+                                .listUsersLikes(new HashSet<>())
+                                .genres(new ArrayList<>())
+                                .build();
                         filmController.create(film);
                     }
                 });
