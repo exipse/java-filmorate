@@ -4,7 +4,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MPA;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
